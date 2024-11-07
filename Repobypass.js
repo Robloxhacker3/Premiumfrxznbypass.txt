@@ -9,22 +9,19 @@ const token = 'github_pat_11BIXNBLQ0AHoUdQKlECd3_Z6yuy01VFRbMepRNcB2sMe8b6XNu857
 
 // Function to scan and validate UDID
 async function scanUDID(udid) {
-  // Basic validation (adjust this logic as needed)
   return validUDIDs.includes(udid);
 }
 
-// Function to handle the UDID check
+// Function to handle the UDID check and gather results
 async function handleUDIDCheck(udids) {
   const udidResults = [];
 
-  // Iterate through the UDIDs and validate them
   for (let udid of udids) {
     const isValid = await scanUDID(udid);
     const status = isValid ? 'Valid' : 'Invalid';
     udidResults.push({ udid, status });
   }
 
-  // Send the results to GitHub
   await updateResultsOnGitHub(udidResults);
 }
 
@@ -35,34 +32,40 @@ async function updateResultsOnGitHub(udidResults) {
     const resultText = udidResults.map(result => `${result.udid}: ${result.status}`).join('\n');
     const fileContent = `UDID Validation Results - ${currentDateTime}\n\n${resultText}`;
 
-    // GitHub API endpoint for updating a file
-    const githubAPIUrl = `https://github.com/Robloxhacker3/Premiumfrxznbypass.txt/blob/main/Repobypass.js`;
+    // GitHub API endpoint for creating or updating file content
+    const githubAPIUrl = `https://github.com/Robloxhacker3/Premiumfrxznbypass.txt/edit/main/Repobypass.js`;
 
     // Get the current file's SHA (required for updating the file)
     const fileResponse = await fetch(githubAPIUrl, {
       method: 'GET',
       headers: {
         'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
       },
     });
 
-    const fileData = await fileResponse.json();
-
-    if (!fileData.content) {
-      throw new Error('File not found or inaccessible');
+    let fileSHA;
+    if (fileResponse.status === 200) {
+      const fileData = await fileResponse.json();
+      fileSHA = fileData.sha; // Get SHA if file already exists
+    } else if (fileResponse.status === 404) {
+      console.log('File not found; it will be created.');
+    } else {
+      throw new Error(`Error fetching file SHA: ${fileResponse.statusText}`);
     }
 
-    // Prepare the request to update the file
+    // Prepare to update or create the file with new content
     const updateResponse = await fetch(githubAPIUrl, {
       method: 'PUT',
       headers: {
         'Authorization': `token ${token}`,
         'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json',
       },
       body: JSON.stringify({
         message: `Update UDID validation results - ${currentDateTime}`,
-        content: btoa(fileContent), // Encode content to Base64
-        sha: fileData.sha, // File SHA to update the correct file
+        content: btoa(unescape(encodeURIComponent(fileContent))), // Encode content to Base64
+        sha: fileSHA, // Include SHA if updating existing file
       }),
     });
 
@@ -70,6 +73,7 @@ async function updateResultsOnGitHub(udidResults) {
 
     if (updateData.commit) {
       console.log('Successfully updated UDID results on GitHub');
+      console.log(`Check results at: https://raw.githubusercontent.com/${owner}/${repo}/main/${filePath}`);
     } else {
       throw new Error('Failed to update UDID results');
     }
