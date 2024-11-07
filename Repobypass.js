@@ -5,7 +5,7 @@ const validUDIDs = ['UDID-123456789', 'UDID-987654321']; // Example valid UDIDs
 const owner = 'Robloxhacker3'; // Replace with your GitHub username
 const repo = 'Premiumfrxznbypass.txt'; // Replace with your GitHub repository name
 const filePath = 'udid_results.txt'; // Path to the file where results will be stored
-const token = 'yourGitHubToken'; // GitHub Personal Access Token (PAT)
+const token = '1907041830'; // GitHub Personal Access Token (PAT)
 
 // Function to scan and validate UDID
 async function scanUDID(udid) {
