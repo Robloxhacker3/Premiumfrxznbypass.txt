@@ -2,8 +2,8 @@
 const validUDIDs = ['UDID-123456789', 'UDID-987654321']; // Example valid UDIDs
 
 // GitHub repository details
-const owner = 'yourGitHubUsername'; // Replace with your GitHub username
-const repo = 'yourRepoName'; // Replace with your GitHub repository name
+const owner = 'Robloxhacker3'; // Replace with your GitHub username
+const repo = 'Premiumfrxznbypass.txt'; // Replace with your GitHub repository name
 const filePath = 'udid_results.txt'; // Path to the file where results will be stored
 const token = 'yourGitHubToken'; // GitHub Personal Access Token (PAT)
 
