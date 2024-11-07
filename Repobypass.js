@@ -36,7 +36,7 @@ async function updateResultsOnGitHub(udidResults) {
     const fileContent = `UDID Validation Results - ${currentDateTime}\n\n${resultText}`;
 
     // GitHub API endpoint for updating a file
-    const githubAPIUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+    const githubAPIUrl = `https://github.com/Robloxhacker3/Premiumfrxznbypass.txt/blob/main/Repobypass.js`;
 
     // Get the current file's SHA (required for updating the file)
     const fileResponse = await fetch(githubAPIUrl, {
